@@ -1,0 +1,16 @@
+{
+    "name": "pdodb/pdodb",
+    "description": "A very simple and straight forward class for interacting with a database",
+    "license": "MIT",
+    "require": {
+        "php": ">=8.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "PhpShark\\": "src/PDODb/"
+        }
+    }
+}
