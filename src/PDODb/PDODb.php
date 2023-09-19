@@ -71,7 +71,6 @@ class Database{
         return $statement !== null;
     }
 
-
     /**
      * @param string $query
      * @param array<mixed> $params
