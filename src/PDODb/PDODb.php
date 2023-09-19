@@ -35,7 +35,7 @@ class Database{
    */
     public function insert(string $query, array $params = []): ?string {
         $statement = $this->executeStatement($query, $params);
-        
+
         if ($statement) {
             return $this->connection->lastInsertId();
         }
@@ -69,28 +69,31 @@ class Database{
     }
     
     /**
-     * @param array<mixed> $data
-     * @param array<mixed> $excludedParameters
+    * Create a parameter string for use in a prepared SQL statement.
+    *
+    * @param array<mixed> $data
+    * @param array<mixed> $excludedParameters
+    * @return string
     */
-    public function createParameterString($data,$excludedParameters = []){
-        $parameterString = "";
-        
-        foreach($data as $key => $value){
-            if(!in_array($key,$excludedParameters)){
-                if(strpos($key,'.') !== false){
-                    $parts = explode('.',$key);
-
-                    $table = $parts[0];
-                    $column = $parts[1];
-
-                    $parameterString .= "$key=:$column,";
-                }else{
-                    $parameterString .= "$key=:$key,";
-                }
+    public function createParameterString(array $data, array $excludedParameters = []): string {
+        $parts = [];
+    
+        foreach ($data as $key => $value) {
+            // Skip excluded parameters
+            if (in_array($key, $excludedParameters)) {
+                continue;
+            }
+    
+            // If key contains a period, it's considered as "table.column"
+            if (strpos($key, '.') !== false) {
+                list($table, $column) = explode('.', $key);
+                $parts[] = "$key=:$column";
+            } else {
+                $parts[] = "$key=:$key";
             }
         }
-        
-        return substr($parameterString,0,-1);
+    
+        return implode(',', $parts);
     }
 
     /**
