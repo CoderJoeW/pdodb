@@ -4,6 +4,7 @@ namespace PDODb;
 
 use PDO;
 use PDOException;
+use PDOStatement;
 
 class Database{
     private PDO $connection;
@@ -112,22 +113,22 @@ class Database{
     }
 
     /**
-     * @param string $query
-     * @param array<mixed> $params
+    * @param string $query
+    * @param array<mixed> $params
+    * @return PDOStatement|null
+    * @throws PDOException
     */
-    private function executeStatement(string $query, array $params = []){
+    private function executeStatement(string $query, array $params = []): ?PDOStatement {
         $statement = $this->connection->prepare($query);
-
+    
         try{
             $statement->execute($params);
         } catch (PDOException $e){
-            error_log($e);
-            error_log(print_r($params));
-            error_log($query);
-            return;
+            throw new PDOException("Failed executing statement: {$e->getMessage()}");
         }
         
         return $statement;
     }
+
 }
 ?>
