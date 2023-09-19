@@ -15,7 +15,7 @@ class Database{
      * @param string $dbName
      * @param string $connectionType
     */
-    public function __construct($username = '', $password = '', $host = '', $dbName = '', $connectionType = 'mysql',array $attributes){
+    public function __construct($username = '', $password = '', $host = '', $dbName = '', $connectionType = 'mysql', array $attributes){
         try{
             $this->connection = new PDO("$connectionType:host=$host;port=3306;dbname=$dbName;charset=utf8mb4",$username,$password);
 
@@ -23,17 +23,24 @@ class Database{
                 $this->connection->setAttribute($k, $v);
             }
         }catch(PDOException $e){
-            echo $e->getMessage();
+            error_log($e->getMessage());
+            throw $e;
         }
     }
 
-    /**
-     * @param string $query
-     * @param array<mixed> $params
-    */
-    public function insert($query ,$params = []): string|bool{
-        $this->executeStatement($query,$params);
-        return $this->connection->lastInsertId();
+   /**
+   * @param string $query
+   * @param array<mixed> $params
+   * @return string|null
+   */
+    public function insert(string $query, array $params = []): ?string {
+        $statement = $this->executeStatement($query, $params);
+        
+        if ($statement) {
+            return $this->connection->lastInsertId();
+        }
+
+        return null;
     }
 
     /**
