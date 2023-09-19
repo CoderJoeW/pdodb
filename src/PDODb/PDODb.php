@@ -15,7 +15,7 @@ class Database{
      * @param string $dbName
      * @param string $connectionType
     */
-    public function __construct($username = '', $password = '', $host = '', $dbName = '', $connectionType = 'mysql', array $attributes){
+    public function __construct(string $username = '', string $password = '', string $host = '', string $dbName = '', string $connectionType = 'mysql', array $attributes = []){
         try{
             $this->connection = new PDO("$connectionType:host=$host;port=3306;dbname=$dbName;charset=utf8mb4",$username,$password);
 
@@ -48,7 +48,7 @@ class Database{
     * @param array<mixed> $params
     * @return array<mixed>
     */
-    public function select($query, $params = []): array {
+    public function select(string $query, array $params = []): array {
         $statement = $this->executeStatement($query, $params);
 
         if (!$statement) {
@@ -75,7 +75,7 @@ class Database{
      * @param string $query
      * @param array<mixed> $params
     */
-    public function remove($query, $params = []){
+    public function remove(string $query, array $params = []){
         $this->executeStatement($query,$params);
     }
     
@@ -111,7 +111,7 @@ class Database{
      * @param string $query
      * @param array<mixed> $params
     */
-    private function executeStatement($query,$params = []){
+    private function executeStatement(string $query, array $params = []){
         $statement = $this->connection->prepare($query);
 
         try{
