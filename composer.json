@@ -10,7 +10,7 @@
     },
     "autoload": {
         "psr-4": {
-            "PDODb\\": "src/PDODb/"
+            "PDODb\\": "src/"
         }
     }
 }
