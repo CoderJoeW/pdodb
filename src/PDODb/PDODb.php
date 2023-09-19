@@ -72,11 +72,15 @@ class Database{
     }
 
     /**
-     * @param string $query
-     * @param array<mixed> $params
+    * Execute a delete SQL query.
+    *
+    * @param string $query The SQL query string.
+    * @param array<mixed> $params The query parameters.
+    * @return bool True on success, false on failure.
     */
-    public function remove(string $query, array $params = []){
-        $this->executeStatement($query,$params);
+    public function remove(string $query, array $params = []): bool {
+        $statement = $this->executeStatement($query, $params);
+        return $statement !== null;
     }
     
     /**
