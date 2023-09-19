@@ -44,11 +44,18 @@ class Database{
     }
 
     /**
-     * @param string $query
-     * @param array<mixed> $params
+    * @param string $query
+    * @param array<mixed> $params
+    * @return array<mixed>
     */
-    public function select($query, $params = []){
-        $statement = $this->executeStatement($query,$params);
+    public function select($query, $params = []): array {
+        $statement = $this->executeStatement($query, $params);
+
+        if (!$statement) {
+            // Should probably throw an exception
+            return [];
+        }
+
         return $statement->fetchAll();
     }
 
@@ -77,13 +84,13 @@ class Database{
     */
     public function createParameterString(array $data, array $excludedParameters = []): string {
         $parts = [];
-    
+
         foreach ($data as $key => $value) {
             // Skip excluded parameters
             if (in_array($key, $excludedParameters)) {
                 continue;
             }
-    
+
             // If key contains a period, it's considered as "table.column"
             if (strpos($key, '.') !== false) {
                 list($table, $column) = explode('.', $key);
@@ -92,7 +99,7 @@ class Database{
                 $parts[] = "$key=:$key";
             }
         }
-    
+
         return implode(',', $parts);
     }
 
